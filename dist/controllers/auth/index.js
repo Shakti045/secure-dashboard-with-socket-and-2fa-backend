@@ -39,9 +39,9 @@ export const signUp = async (req, res) => {
         }
         const recentotp = await Otp.find({ email: email }).sort({ createdat: -1 }).limit(1);
         if (!recentotp || recentotp.length === 0) {
-            return res.status(400).json({ success: false, message: 'Please generate OTP first' });
+            return res.status(400).json({ success: false, message: 'OTP expired' });
         }
-        if (recentotp[0].createdat.getTime() + 5 * 60 * 1000 < Date.now()) {
+        if (recentotp[0].createdat.getTime() + 5 * 60 * 1000 > Date.now()) {
             return res.status(400).json({ success: false, message: 'OTP expired' });
         }
         if (recentotp[0].otp !== otp) {
