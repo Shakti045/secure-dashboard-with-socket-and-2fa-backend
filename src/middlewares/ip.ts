@@ -1,15 +1,16 @@
 import { Ip } from "../models/ip.js";
 import { Request, Response ,NextFunction } from 'express';
+import requestip from 'request-ip';
 
 export const ipcheck = async (req:Request, res: Response, next: NextFunction) => {
     try {
-        const ip = req.ip;
+        const ip = requestip.getClientIp(req) || req.socket.remoteAddress;
         const ipdata = await Ip.findOne({address:ip});
         if(!ipdata){
             await Ip.create({address:ip});
             return next();
         }else if(ipdata.attemptnumber>=5){
-            if(ipdata.date.getTime() + 5*60*1000 < Date.now()){
+            if(ipdata.date.getTime() + 5*60*1000 > Date.now()){
               await Ip.findByIdAndUpdate(ipdata._id, {attemptnumber:1});
                 return next();
             }else{
