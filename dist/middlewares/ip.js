@@ -5,7 +5,7 @@ export const ipcheck = async (req, res, next) => {
         const ip = requestip.getClientIp(req) || req.socket.remoteAddress;
         const ipdata = await Ip.findOne({ address: ip });
         if (!ipdata) {
-            await Ip.create({ address: ip });
+            await Ip.create({ address: ip, attemptnumber: 1 });
             return next();
         }
         else if (ipdata.attemptnumber >= 5) {

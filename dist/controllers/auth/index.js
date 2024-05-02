@@ -3,6 +3,7 @@ import { User } from "../../models/user.js";
 import otpgenerator from 'otp-generator';
 import bcrypt from 'bcrypt';
 import DeviceDetector from "node-device-detector";
+import requestip from 'request-ip';
 import { sendmail } from "../../utils/mail.js";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -89,7 +90,8 @@ export const performdeviceregistration = async (user, email, req) => {
             clienttype: result?.client?.type || 'unknown',
             devicetype: result?.device?.type || 'unknown'
         };
-        const device = await Device.create({ os: info.os, version: info.version, clientname: info.clientname, clienttype: info.clienttype, devicetype: info.devicetype, user: user._id, ip: req.ip, timeoflogin: Date.now() });
+        const ip = requestip.getClientIp(req) || req.socket.remoteAddress;
+        const device = await Device.create({ os: info.os, version: info.version, clientname: info.clientname, clienttype: info.clienttype, devicetype: info.devicetype, user: user._id, ip: ip, timeoflogin: Date.now() });
         await User.findByIdAndUpdate({ _id: user._id }, { $push: { logindevices: device._id } });
         await sendmail(email, 'New login alert', `<p>A new login  was detected on your account,Login informations are given below:
          <span>OS:${info.os}</span> <span>Version:${info.version}</span> <span>Client Name:${info.clientname}</span> <span>Client Type:${info.clienttype}</span> <span>Device Type:${info.devicetype}</span> 
