@@ -13,7 +13,7 @@ const OTPSchema = new mongoose.Schema({
         type: Date,
         required: true,
         default: Date.now(),
-        expires: 300
+        expires: 3000
     }
 });
 OTPSchema.post('save', async (doc) => {
