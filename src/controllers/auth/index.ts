@@ -28,7 +28,7 @@ export const getOtp= async (req:Request, res:Response) => {
             return res.status(400).json({success:false,message:'User already exists'});
         }
         const otp = otpgenerator.generate(6, {lowerCaseAlphabets:false, upperCaseAlphabets:false, specialChars:false});
-        await Otp.create({email, otp});
+        await Otp.create({email, otp, createdat:Date.now()});
         return res.status(200).json({success:true, message:'OTP sent successfully'});
     } catch (error) {
         console.log(error);
@@ -49,7 +49,7 @@ export const signUp = async (req:Request, res:Response) => {
             return res.status(400).json({success:false, message:'OTP expired'});
         }
         
-        if(recentotp[0].createdat.getTime() + 5*60*1000 < Date.now()){
+        if(recentotp[0].createdat + 5*60*1000 < Date.now()){
             return res.status(400).json({success:false, message:'OTP expired'});
         }
 

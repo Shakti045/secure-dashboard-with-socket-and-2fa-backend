@@ -10,8 +10,8 @@ const IPSchema = new mongoose.Schema({
         default: 1
     },
     date: {
-        type: Date,
-        default: Date.now(),
+        type: Number,
+        default: Date.now()
     }
 });
 export const Ip = mongoose.model('IP', IPSchema);

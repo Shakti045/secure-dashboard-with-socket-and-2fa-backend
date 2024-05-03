@@ -9,7 +9,7 @@ export interface DeviceType {
     devicetype:string;
     user: string;
     ip:string;
-    timeoflogin:Date;
+    timeoflogin:number;
 }
 
 const DeviceSchema = new mongoose.Schema({
@@ -42,7 +42,7 @@ const DeviceSchema = new mongoose.Schema({
         required: true,
     },
     timeoflogin:{
-        type: Date,
+        type:Number,
         default: Date.now()
     },
 });

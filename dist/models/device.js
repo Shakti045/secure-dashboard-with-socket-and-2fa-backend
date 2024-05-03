@@ -29,7 +29,7 @@ const DeviceSchema = new mongoose.Schema({
         required: true,
     },
     timeoflogin: {
-        type: Date,
+        type: Number,
         default: Date.now()
     },
 });

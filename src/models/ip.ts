@@ -4,7 +4,7 @@ export interface IPType {
     _id: mongoose.Types.ObjectId;
     address: string;
     attemptnumber:number;
-    date: Date;
+    date: number;
 }
 const IPSchema = new mongoose.Schema({
     address: {
@@ -17,8 +17,8 @@ const IPSchema = new mongoose.Schema({
         default:1
     },
     date: {
-        type: Date,
-        default: Date.now(),
+        type:Number,
+        default: Date.now()
     }
 });
 

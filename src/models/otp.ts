@@ -5,7 +5,7 @@ interface OTPType {
     _id: mongoose.Types.ObjectId;
     email: string;
     otp: string;
-    createdat: Date;
+    createdat: number;
 }
 const OTPSchema = new mongoose.Schema({
     email: {
@@ -17,7 +17,7 @@ const OTPSchema = new mongoose.Schema({
         required: true,
     },
     createdat:{
-        type:Date,
+        type:Number,
         required:true,
         default:Date.now(),
         expires:3000
