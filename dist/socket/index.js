@@ -10,6 +10,9 @@ export const initialiseSocket = (server) => {
         socket.on('join', (room) => {
             socket.join(room);
         });
+        // socket.on('joindevice', (deviceid:string) => {
+        //     socket.join(deviceid);
+        // });
     });
 };
 export const getio = () => {

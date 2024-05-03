@@ -139,12 +139,12 @@ export const signIn = async (req:Request , res:Response) => {
             return res.status(400).json({success:false, message:'Invalid credentials'});
         }
 
-        if(user.secretKey!=null){
-            return res.status(200).json({success:true, message:'Password verified',secretkeyexist:true,userid:user._id,username:user.username});
+        if(user.secretenabled){
+            return res.status(200).json({success:true, message:'Password verified',secretenabled:true,userid:user._id,username:user.username});
         }
         
         const qrCode = await get2faqrcode(user._id);
-        return res.status(200).json({success:true, message:'Password verified',qrCode:qrCode,secretkeyexist:false,userid:user._id,username:user.username});
+        return res.status(200).json({success:true, message:'Password verified',qrCode:qrCode,secretenabled:false,userid:user._id,username:user.username});
 
     } catch (error) {
         console.log(error);
@@ -168,6 +168,7 @@ export const verify2fa = async (req:Request, res:Response) => {
         if(!isVerified){
             return res.status(400).json({success:false, message:'Invalid code'});
         }
+        await User.findByIdAndUpdate({_id:userid},{secretenabled:true});
         const email = user.email;
         const device = await performdeviceregistration(user,email,req);
         const io = getio();

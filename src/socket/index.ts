@@ -7,9 +7,12 @@ export const initialiseSocket = (server:any) => {
         globalsocket = socket;
         socket.on('disconnect', () => {
         });
-        socket.on('join', (room:any) => {
+        socket.on('join', (room:string) => {
             socket.join(room);
         });
+        // socket.on('joindevice', (deviceid:string) => {
+        //     socket.join(deviceid);
+        // });
         
     });
 };

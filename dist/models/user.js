@@ -17,6 +17,10 @@ const UserSchhema = new mongoose.Schema({
         type: String,
         default: null,
     },
+    secretenabled: {
+        type: Boolean,
+        default: false,
+    },
     role: {
         type: String,
         enum: ['admin', 'user'],
