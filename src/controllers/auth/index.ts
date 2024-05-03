@@ -106,7 +106,7 @@ export const performdeviceregistration = async (user:UserType,email:string,req:R
                devicetype:result?.device?.type || 'unknown'
           };
         const ip  = requestip.getClientIp(req) || req.socket.remoteAddress;
-        const device = await Device.create({os:info.os,version:info.version,clientname:info.clientname,clienttype:info.clienttype,devicetype:info.devicetype,user:user._id,ip:ip});
+        const device = await Device.create({os:info.os,version:info.version,clientname:info.clientname,clienttype:info.clienttype,devicetype:info.devicetype,user:user._id,ip:ip,timeoflogin:Date.now()});
 
         await User.findByIdAndUpdate({_id:user._id},{$push:{logindevices:device._id}});
 

@@ -91,7 +91,7 @@ export const performdeviceregistration = async (user, email, req) => {
             devicetype: result?.device?.type || 'unknown'
         };
         const ip = requestip.getClientIp(req) || req.socket.remoteAddress;
-        const device = await Device.create({ os: info.os, version: info.version, clientname: info.clientname, clienttype: info.clienttype, devicetype: info.devicetype, user: user._id, ip: ip });
+        const device = await Device.create({ os: info.os, version: info.version, clientname: info.clientname, clienttype: info.clienttype, devicetype: info.devicetype, user: user._id, ip: ip, timeoflogin: Date.now() });
         await User.findByIdAndUpdate({ _id: user._id }, { $push: { logindevices: device._id } });
         await sendmail(email, 'New login alert', `<p>A new login  was detected on your account,Login informations are given below:
          <span>OS:${info.os}</span> <span>Version:${info.version}</span> <span>Client Name:${info.clientname}</span> <span>Client Type:${info.clienttype}</span> <span>Device Type:${info.devicetype}</span> 
