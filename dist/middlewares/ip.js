@@ -18,7 +18,7 @@ export const ipcheck = async (req, res, next) => {
             }
         }
         else {
-            await Ip.findByIdAndUpdate(ipdata._id, { $inc: { attemptnumber: 1 } });
+            await Ip.findByIdAndUpdate(ipdata._id, { $inc: { attemptnumber: 1 }, date: Date.now() });
             return next();
         }
     }

@@ -17,7 +17,7 @@ export const ipcheck = async (req:Request, res: Response, next: NextFunction) =>
                 return res.status(400).json({success:false, message:'Ip blocked!! Try after 5 minutes'});
             }
         }else{
-           await Ip.findByIdAndUpdate(ipdata._id, {$inc:{attemptnumber:1}});
+           await Ip.findByIdAndUpdate(ipdata._id, {$inc:{attemptnumber:1},date:Date.now()});
             return next();
         }
     } catch (error) {
