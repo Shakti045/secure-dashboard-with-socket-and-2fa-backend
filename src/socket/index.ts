@@ -1,9 +1,12 @@
-import { Server } from 'socket.io';
-let io:any;
-let globalsocket:any;
-export const initialiseSocket = (server:any) => {
+import { Server, Socket } from 'socket.io';
+import { Server as HttpServer } from 'http';
+
+let io:Server;
+let globalsocket:Socket;
+
+export const initialiseSocket = (server:HttpServer) => {
     io = new Server(server, { cors: { origin: '*', } });
-    io.on('connection', (socket:any) => {
+    io.on('connection', (socket:Socket) => {
         globalsocket = socket;
         socket.on('disconnect', () => {
         });

@@ -1,7 +1,12 @@
 import mongoose from "mongoose";
 import { sendmail } from "../utils/mail.js";
 
-
+interface OTPType {
+    _id: mongoose.Types.ObjectId;
+    email: string;
+    otp: string;
+    createdat: Date;
+}
 const OTPSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -19,7 +24,7 @@ const OTPSchema = new mongoose.Schema({
     }
 });
 
-OTPSchema.post('save', async(doc:any)=>{
+OTPSchema.post('save', async(doc:OTPType)=>{
    try {
       await sendmail(doc.email, 'OTP for verify your mail id', `Your OTP is ${doc.otp}`);
    } catch (error) {

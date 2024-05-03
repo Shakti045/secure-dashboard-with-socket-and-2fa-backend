@@ -1,5 +1,17 @@
 import mongoose from "mongoose";
 
+export interface DeviceType {
+    _id: mongoose.Types.ObjectId;
+    os: string;
+    version: number;
+    clientname: string;
+    clienttype: string;
+    devicetype:string;
+    user: string;
+    ip:string;
+    timeoflogin:Date;
+}
+
 const DeviceSchema = new mongoose.Schema({
     os: {
         type: String,
@@ -31,7 +43,7 @@ const DeviceSchema = new mongoose.Schema({
     },
     timeoflogin:{
         type: Date,
-        default: Date.now
+        default: Date.now()
     },
 });
 

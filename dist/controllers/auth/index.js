@@ -41,7 +41,7 @@ export const signUp = async (req, res) => {
         if (!recentotp || recentotp.length === 0) {
             return res.status(400).json({ success: false, message: 'OTP expired' });
         }
-        if (recentotp[0].createdat.getTime() + 5 * 60 * 1000 > Date.now()) {
+        if (recentotp[0].createdat.getTime() + 5 * 60 * 1000 < Date.now()) {
             return res.status(400).json({ success: false, message: 'OTP expired' });
         }
         if (recentotp[0].otp !== otp) {
@@ -91,7 +91,7 @@ export const performdeviceregistration = async (user, email, req) => {
             devicetype: result?.device?.type || 'unknown'
         };
         const ip = requestip.getClientIp(req) || req.socket.remoteAddress;
-        const device = await Device.create({ os: info.os, version: info.version, clientname: info.clientname, clienttype: info.clienttype, devicetype: info.devicetype, user: user._id, ip: ip, timeoflogin: Date.now() });
+        const device = await Device.create({ os: info.os, version: info.version, clientname: info.clientname, clienttype: info.clienttype, devicetype: info.devicetype, user: user._id, ip: ip });
         await User.findByIdAndUpdate({ _id: user._id }, { $push: { logindevices: device._id } });
         await sendmail(email, 'New login alert', `<p>A new login  was detected on your account,Login informations are given below:
          <span>OS:${info.os}</span> <span>Version:${info.version}</span> <span>Client Name:${info.clientname}</span> <span>Client Type:${info.clienttype}</span> <span>Device Type:${info.devicetype}</span> 

@@ -30,7 +30,7 @@ const DeviceSchema = new mongoose.Schema({
     },
     timeoflogin: {
         type: Date,
-        default: Date.now
+        default: Date.now()
     },
 });
 export const Device = mongoose.model('Device', DeviceSchema);

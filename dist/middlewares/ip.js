@@ -9,7 +9,7 @@ export const ipcheck = async (req, res, next) => {
             return next();
         }
         else if (ipdata.attemptnumber >= 5) {
-            if (ipdata.date.getTime() + 5 * 60 * 1000 > Date.now()) {
+            if (ipdata.date.getTime() + 5 * 60 * 1000 < Date.now()) {
                 await Ip.findByIdAndUpdate(ipdata._id, { attemptnumber: 1 });
                 return next();
             }

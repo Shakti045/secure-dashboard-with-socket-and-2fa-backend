@@ -11,7 +11,7 @@ const IPSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        default: Date.now,
+        default: Date.now(),
     }
 });
 export const Ip = mongoose.model('IP', IPSchema);

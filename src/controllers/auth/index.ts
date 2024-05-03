@@ -1,5 +1,5 @@
 import { Otp } from "../../models/otp.js";
-import { User } from "../../models/user.js";
+import { User, UserType } from "../../models/user.js";
 import otpgenerator from 'otp-generator';
 import bcrypt from 'bcrypt';
 import e, { Request, Response } from 'express';
@@ -49,7 +49,7 @@ export const signUp = async (req:Request, res:Response) => {
             return res.status(400).json({success:false, message:'OTP expired'});
         }
         
-        if(recentotp[0].createdat.getTime() + 5*60*1000 > Date.now()){
+        if(recentotp[0].createdat.getTime() + 5*60*1000 < Date.now()){
             return res.status(400).json({success:false, message:'OTP expired'});
         }
 
@@ -84,11 +84,11 @@ export const get2faqrcode = async(userid:mongoose.Types.ObjectId) => {
 }
 
 
-export const performdeviceregistration = async (user:any,email:string,req:Request) => {
+export const performdeviceregistration = async (user:UserType,email:string,req:Request) => {
     try {  
         const userAgent = req.headers['user-agent'];
         //@ts-ignore
-        const detector:any = new DeviceDetector({
+        const detector = new DeviceDetector({
             clientIndexes: true,
             deviceIndexes: true,
             deviceAliasCode: false,
@@ -106,7 +106,7 @@ export const performdeviceregistration = async (user:any,email:string,req:Reques
                devicetype:result?.device?.type || 'unknown'
           };
         const ip  = requestip.getClientIp(req) || req.socket.remoteAddress;
-        const device = await Device.create({os:info.os,version:info.version,clientname:info.clientname,clienttype:info.clienttype,devicetype:info.devicetype,user:user._id,ip:ip,timeoflogin:Date.now()});
+        const device = await Device.create({os:info.os,version:info.version,clientname:info.clientname,clienttype:info.clienttype,devicetype:info.devicetype,user:user._id,ip:ip});
 
         await User.findByIdAndUpdate({_id:user._id},{$push:{logindevices:device._id}});
 

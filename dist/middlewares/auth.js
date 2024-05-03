@@ -3,12 +3,12 @@ import { User } from "../models/user.js";
 export const authenticate = async (req, res, next) => {
     try {
         const token = req?.header("Authorization")?.replace("Bearer ", "") || req?.cookies?.token;
-        if (!token) {
+        if (!token || token === '') {
             return res.status(401).json({ success: false, message: 'Token missing' });
         }
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById({ _id: decoded.id });
-        if (user?.logindevices.indexOf(decoded.deviceid) === -1) {
+        const user = await User.findById({ _id: decoded?.id });
+        if (user?.logindevices.indexOf(decoded?.deviceid) === -1) {
             return res.status(200).json({ success: false, message: 'Device has been removed' });
         }
         //@ts-ignore
@@ -16,7 +16,7 @@ export const authenticate = async (req, res, next) => {
         next();
     }
     catch (error) {
-        console.log('Error in authenticate middleware', error);
+        console.log('Error in authenticate middleware', error?.message || 'jwt verification error');
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 };
