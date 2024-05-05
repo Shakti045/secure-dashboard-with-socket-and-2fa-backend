@@ -7,9 +7,10 @@ import bcrypt from 'bcrypt';
 
 
 
-export const getuserinfo = async (req:Request & {userId?:string}, res: Response) => {
+export const getuserinfo = async (req:Request & {userId?:string} & {mydeviceId?:string}, res: Response) => {
     try {
         const id = req.userId;
+        const mydeviceId = req.mydeviceId;
         const userdetails = await User.findById({_id:id},{password:0}).populate({
             path:'logindevices',
             model:'Device',
@@ -19,7 +20,9 @@ export const getuserinfo = async (req:Request & {userId?:string}, res: Response)
         if(!userdetails){
             return res.status(400).json({success:false, message:'User not found'});
         }
-        return res.status(200).json({success:true, message:'User details', data:userdetails});
+        //@ts-ignore
+        
+        return res.status(200).json({success:true, message:'User details', data:userdetails,mydeviceId:mydeviceId});
     } catch (error) {
         console.log('Error in getuserinfo', error);
         return res.status(500).json({success:false, message:'Internal server error'});

@@ -6,7 +6,7 @@ import cookieparser from 'cookie-parser';
 import router from './routes/route.js';
 import { connectDb } from './config/dbconfig.js';
 import { initialiseSocket } from './socket/index.js';
-
+import userAgent from 'express-useragent';
 
 
 dotenv.config({path:'.env'});
@@ -16,6 +16,7 @@ const server = http.createServer(app);
 initialiseSocket(server);
 
 app.use(cookieparser());
+app.use(userAgent.express());
 app.use(cors({origin: '*',credentials: true}));
 app.use(express.json());
 app.use("/api/v1",router);

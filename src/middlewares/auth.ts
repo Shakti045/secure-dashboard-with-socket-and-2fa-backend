@@ -23,6 +23,8 @@ export const authenticate = async (req:Request, res: Response, next: NextFunctio
         }
         //@ts-ignore
         req.userId = decoded.id;
+        //@ts-ignore
+        req.mydeviceId = decoded.deviceid;
         next();
     } catch (error:any) {
         console.log('Error in authenticate middleware', error?.message || 'jwt verification error');

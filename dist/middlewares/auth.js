@@ -13,6 +13,8 @@ export const authenticate = async (req, res, next) => {
         }
         //@ts-ignore
         req.userId = decoded.id;
+        //@ts-ignore
+        req.mydeviceId = decoded.deviceid;
         next();
     }
     catch (error) {

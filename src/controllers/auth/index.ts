@@ -84,37 +84,42 @@ export const get2faqrcode = async(userid:mongoose.Types.ObjectId) => {
 }
 
 
-export const performdeviceregistration = async (user:UserType,email:string,req:Request) => {
+export const performdeviceregistration = async (user:UserType,email:string,req:any) => {
     try {  
-        const userAgent = req.headers['user-agent'];
+        // const userAgent = req.headers['user-agent'];
         //@ts-ignore
-        const detector = new DeviceDetector({
-            clientIndexes: true,
-            deviceIndexes: true,
-            deviceAliasCode: false,
-            deviceTrusted: true,
-            deviceInfo: true,
-            maxUserAgentSize: 500,
-          });
+        // const detector = new DeviceDetector({
+        //     clientIndexes: true,
+        //     deviceIndexes: true,
+        //     deviceAliasCode: false,
+        //     deviceTrusted: true,
+        //     deviceInfo: true,
+        //     maxUserAgentSize: 500,
+        //   });
           //@ts-ignore
-          const result = detector.detect(userAgent);
+        //   const result = detector.detect(userAgent);
+        // const info = {
+        //     os: req.useragent.os || 'unknown',
+        //     version: result?.os?.version || 'unknown',
+        //     clientname: result?.client?.name || 'unknown',
+        //     clienttype: result?.client?.type || 'unknown',
+        //     devicetype: result?.device?.type || 'unknown'
+        // };
           const info = {
-               os:result?.os?.name || 'unknown',
-               version:result?.os?.version || 'unknown',
-               clientname:result?.client?.name || 'unknown',
-               clienttype:result?.client?.type || 'unknown',
-               devicetype:result?.device?.type || 'unknown'
+               os:req?.useragent?.os || 'unknown',
+               clientname:req?.useragent?.platform || 'unknown',
+               clienttype:req?.useragent?.browser || 'unknown',
+               devicetype:req?.useragent?.isMobile?'mobile':'dekstop' || 'unknown'
           };
         const ip  = requestip.getClientIp(req) || req.socket.remoteAddress;
-        const device = await Device.create({os:info.os,version:info.version,clientname:info.clientname,clienttype:info.clienttype,devicetype:info.devicetype,user:user._id,ip:ip,timeoflogin:Date.now()});
+        const device = await Device.create({os:info.os,clientname:info.clientname,clienttype:info.clienttype,devicetype:info.devicetype,user:user._id,ip:ip,timeoflogin:Date.now()});
 
         await User.findByIdAndUpdate({_id:user._id},{$push:{logindevices:device._id}});
 
         await sendmail(email,'New login alert',
         `<p>A new login  was detected on your account,Login informations are given below:
-         <span>OS:${info.os}</span> <span>Version:${info.version}</span> <span>Client Name:${info.clientname}</span> <span>Client Type:${info.clienttype}</span> <span>Device Type:${info.devicetype}</span> 
+         <span>OS:${info.os}</span>  <span>Client Name:${info.clientname}</span> <span>Client Type:${info.clienttype}</span> <span>Device Type:${info.devicetype}</span> 
         </p>`);
-        
         return device;
     } catch (error) {
         console.log('Error occured while performing IP related tasks',error);

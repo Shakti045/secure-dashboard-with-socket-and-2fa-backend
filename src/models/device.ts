@@ -17,10 +17,6 @@ const DeviceSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    version: {
-        type: Number,
-        required: true,
-    },
     clientname: {
         type: String,
         required: true,
